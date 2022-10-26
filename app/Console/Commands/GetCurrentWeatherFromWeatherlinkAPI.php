@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
+use App\Models\WeatherHistory;
+use DB;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
@@ -49,6 +51,21 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         // $request = Http::get(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime,$startTime,$endTime)}");
         $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}");
         $response = json_decode($request->getBody());
-        dd($response);
+
+        DB::beginTransaction();
+        try {
+
+            $weatherHistory = new WeatherHistory();
+            $weatherHistory->master_stasion_id = $suryaciptaStasion;
+            $weatherHistory->unix_epoch_time = $response->sensors[0]->data[0]->ts;
+            $weatherHistory->rain_rate_hi_mm = $response->sensors[0]->data[0]->rain_rate_mm;
+            $weatherHistory->save();
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+            return abort(500);
+        }
+        DB::commit();
     }
 }
