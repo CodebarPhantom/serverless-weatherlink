@@ -4,9 +4,12 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use App\Http\Traits\APISignatureWeatherlink;
+use Carbon\Carbon;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
+    use APISignatureWeatherlink;
     /**
      * The name and signature of the console command.
      *
@@ -29,6 +32,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
     public function __construct()
     {
         parent::__construct();
+
     }
 
     /**
@@ -38,9 +42,12 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
      */
     public function handle()
     {
-
-        //$request = Http::get('https://api.weatherlink.com/v2/historic/140323?api-key='.env('WEATHERLINK_API_KEY').'t=1666339200&start-timestamp=1666335600&end-timestamp=1666338600'.'&api-signature='.hash_hmac('sha256', 'api-key'.env('WEATHERLINK_API_KEY').'end-timestamp1666338600start-timestamp1666335600station-id140323'.'t1666339200', env('WEATHERLINK_API_SECRET')));
-        $request = Http::get('https://api.weatherlink.com/v2/stations?api-key=grejkxsbo6g3r8rigf8vmzcpc7rkmhl2&t=1666340974&api-signature=1020971be83e7a98bdbb5400350c46a76f911be16c1f58bb3dd817c35193701c');
+        $suryaciptaStasion = 140323;
+        $currentUnixEpochTime = Carbon::now()->timestamp;
+        // $startTime =1665565200; for historic period
+        // $endTime =1665568800;
+        // $request = Http::get(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime,$startTime,$endTime)}");
+        $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}");
         $response = json_decode($request->getBody());
         dd($response);
     }
