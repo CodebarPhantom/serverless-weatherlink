@@ -24,7 +24,7 @@ functions:
         handler: public/index.php
         timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
         layers:
-            - ${bref:layer.php-80-fpm}
+            - ${bref:layer.php-81-fpm}
         events:
             - httpApi: '*'
     # This function lets us run artisan commands in Lambda
@@ -32,9 +32,41 @@ functions:
         handler: artisan
         timeout: 120 # in seconds
         layers:
-            - ${bref:layer.php-80} # PHP
+            - ${bref:layer.php-81} # PHP
             - ${bref:layer.console} # The "console" layer
+        events:
+          - schedule:
+                rate: rate(6 minutes)
+                input: '"weatherlink-api:current-weather"'
 
 plugins:
     # We need to include the Bref plugin
     - ./vendor/bref/bref
+    - serverless-lift
+
+constructs:
+  website:
+    type: server-side-website
+    assets:
+      '/js/*': public/js
+      '/css/*': public/css
+      '/favicon.ico': public/favicon.ico
+      '/robots.txt': public/robots.txt
+      # add here any file or directory that needs to be served from S3
+    # Laravel uses some headers that are not in CloudFront's default whitelist.
+    # To add any, we need to list all accepted headers to pass through.
+    # https://github.com/getlift/lift/blob/master/docs/server-side-website.md#forwarded-headers
+    forwardedHeaders:
+      - Accept
+      - Accept-Language
+      - Content-Type
+      - Origin
+      - Referer
+      - User-Agent
+      - X-Forwarded-Host
+      - X-Requested-With
+      # Laravel Framework Headers
+      - X-Csrf-Token
+      # Other Headers (e.g. Livewire, Laravel Nova), uncomment based on your needs
+      # - X-Livewire
+      # - X-Inertia
