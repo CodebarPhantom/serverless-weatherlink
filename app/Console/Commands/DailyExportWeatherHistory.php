@@ -41,8 +41,8 @@ class DailyExportWeatherHistory extends Command
     public function handle()
     {
         $now = carbon::now()->format('d-m-Y');
-        $path = 'weather-history';
-        Excel::store(new WeatherHistoryExport, "{$path}/{$now}_WeatherHistory.xlsx", 's3_public', null, [
+        $path = "weather-history/{$now}_WeatherHistory.xlsx";
+        Excel::store(new WeatherHistoryExport, $path, 's3_public', null, [
             'visibility' => 'public',
         ]);
     }
