@@ -293,7 +293,7 @@ return [
         | storing reading or downloading. Here you can customize that path.
         |
         */
-        'local_path'          => storage_path('framework/cache/laravel-excel'),
+        'local_path'          => sys_get_temp_dir(), //storage_path('framework/cache/laravel-excel'),
 
         /*
         |--------------------------------------------------------------------------
@@ -309,7 +309,7 @@ return [
         | in conjunction with queued imports and exports.
         |
         */
-        'remote_disk'         => null,
+        'remote_disk'         => 's3_public',
         'remote_prefix'       => null,
 
         /*

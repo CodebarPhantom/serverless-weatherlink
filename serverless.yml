@@ -57,7 +57,7 @@ functions:
               rate: rate(6 minutes)
               input: '"weatherlink-api:current-weather"'
           - schedule:
-              rate: rate(5 minutes)
+              rate: cron(5 0 * * ? *)
               input: '"weatherlink-api:daily-export-weather-history"'
 
 plugins:

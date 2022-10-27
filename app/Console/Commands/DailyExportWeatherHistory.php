@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Exports\WeatherHistoryExport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class DailyExportWeatherHistory extends Command
 {
@@ -39,6 +40,10 @@ class DailyExportWeatherHistory extends Command
      */
     public function handle()
     {
-        Excel::store(new WeatherHistoryExport, 'weather-history/WeatherHistory.xlsx', 's3_public');
+        $now = carbon::now()->format('d-m-Y');
+        $path = 'weather-history';
+        Excel::store(new WeatherHistoryExport, "{$path}/{$now}_WeatherHistory.xlsx", 's3_public', null, [
+            'visibility' => 'public',
+        ]);
     }
 }
