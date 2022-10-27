@@ -18,8 +18,8 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
     public function view(): View
     {
 
-        $start = Carbon::now()->format("Y-m-d 00:00:00");
-        $end = Carbon::now()->format("Y-m-d 23:59:59");
+        $start = Carbon::now()->subDay()->format("Y-m-d 00:00:00");
+        $end = Carbon::now()->subDay()->format("Y-m-d 23:59:59");
 
         $datas = WeatherHistory::where('created_at','>=',$start)
         ->where('created_at','<=',$end)

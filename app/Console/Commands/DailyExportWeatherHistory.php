@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Exports\WeatherHistoryExport;
+use App\Models\WeatherHistoryReport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use DB;
 
 class DailyExportWeatherHistory extends Command
 {
@@ -40,10 +42,25 @@ class DailyExportWeatherHistory extends Command
      */
     public function handle()
     {
-        $now = carbon::now()->format('d-m-Y');
+        $now = carbon::now()->subDay()->format('d-m-Y');
         $path = "weather-history/{$now}_WeatherHistory.xlsx";
         Excel::store(new WeatherHistoryExport, $path, 's3_public', null, [
             'visibility' => 'public',
         ]);
+
+        DB::beginTransaction();
+        try {
+
+            $weatherHistoryReport = new WeatherHistoryReport();
+            $weatherHistoryReport->name = "Report Cuaca {$now}";
+            $weatherHistoryReport->path_s3 = $path;
+            $weatherHistoryReport->save();
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+            return abort(500);
+        }
+        DB::commit();
     }
 }
