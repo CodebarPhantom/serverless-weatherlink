@@ -139,6 +139,20 @@
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/laravel-weatherlink-apps-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "${Storage.Arn}"
+                    },
+                    {
+                      "Fn::Sub": "${Storage.Arn}/*"
+                    }
+                  ]
                 }
               ]
             }
@@ -167,13 +181,20 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666836002184-2022-10-27T02:00:02.184Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666841748262-2022-10-27T03:35:48.262Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2",
         "FunctionName": "laravel-weatherlink-apps-dev-web",
         "MemorySize": 1024,
         "Timeout": 28,
+        "Environment": {
+          "Variables": {
+            "AWS_BUCKET": {
+              "Ref": "Storage"
+            }
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -195,13 +216,20 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666836002184-2022-10-27T02:00:02.184Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666841748262-2022-10-27T03:35:48.262Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "artisan",
         "Runtime": "provided.al2",
         "FunctionName": "laravel-weatherlink-apps-dev-artisan",
         "MemorySize": 1024,
         "Timeout": 120,
+        "Environment": {
+          "Variables": {
+            "AWS_BUCKET": {
+              "Ref": "Storage"
+            }
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -217,24 +245,24 @@
         "ArtisanLogGroup"
       ]
     },
-    "WebLambdaVersionlKXyZQlUQLKK6ANZvyjJXwcQQbFRi0I7Ql08BJUd3i8": {
+    "WebLambdaVersionewqoMiJhcmZqpLNYe6HrfkdUK2vYJqR7Y2CfPnNzo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WebLambdaFunction"
         },
-        "CodeSha256": "W0t3CbIEWttAq8ObZlfcL4EH3m6XjHgltbnLp80oX/Y="
+        "CodeSha256": "698bC4PxoTIepFE+9D6bFGcan9FyDuMgAdCdcPXEM3k="
       }
     },
-    "ArtisanLambdaVersioniljOpypG1ZpNtl3VF03ZVNuAPfQ7iqWF6SrAyUMwPEs": {
+    "ArtisanLambdaVersionj6PpVRa5D1pdtSDp29F1YSSJHAEd6OMqjsq0PZBOeo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ArtisanLambdaFunction"
         },
-        "CodeSha256": "W0t3CbIEWttAq8ObZlfcL4EH3m6XjHgltbnLp80oX/Y="
+        "CodeSha256": "698bC4PxoTIepFE+9D6bFGcan9FyDuMgAdCdcPXEM3k="
       }
     },
     "ArtisanEventsRuleSchedule1": {
@@ -270,6 +298,44 @@
         "SourceArn": {
           "Fn::GetAtt": [
             "ArtisanEventsRuleSchedule1",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "ArtisanEventsRuleSchedule2": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "ScheduleExpression": "rate(5 minutes)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Input": "\"weatherlink-api:daily-export-weather-history\"",
+            "Arn": {
+              "Fn::GetAtt": [
+                "ArtisanLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Id": "artisanSchedule"
+          }
+        ]
+      }
+    },
+    "ArtisanLambdaPermissionEventsRuleSchedule2": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ArtisanLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "ArtisanEventsRuleSchedule2",
             "Arn"
           ]
         }
@@ -368,6 +434,9 @@
         }
       },
       "DependsOn": "HttpApiIntegrationWeb"
+    },
+    "Storage": {
+      "Type": "AWS::S3::Bucket"
     },
     "websiteAssets2A73BB69": {
       "Type": "AWS::S3::Bucket",
@@ -817,7 +886,7 @@
     "WebLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WebLambdaVersionlKXyZQlUQLKK6ANZvyjJXwcQQbFRi0I7Ql08BJUd3i8"
+        "Ref": "WebLambdaVersionewqoMiJhcmZqpLNYe6HrfkdUK2vYJqR7Y2CfPnNzo"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-WebLambdaFunctionQualifiedArn"
@@ -826,7 +895,7 @@
     "ArtisanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ArtisanLambdaVersioniljOpypG1ZpNtl3VF03ZVNuAPfQ7iqWF6SrAyUMwPEs"
+        "Ref": "ArtisanLambdaVersionj6PpVRa5D1pdtSDp29F1YSSJHAEd6OMqjsq0PZBOeo"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-ArtisanLambdaFunctionQualifiedArn"
