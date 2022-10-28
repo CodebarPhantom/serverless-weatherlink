@@ -181,7 +181,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666859838556-2022-10-27T08:37:18.556Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666925190754-2022-10-28T02:46:30.754Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2",
@@ -216,7 +216,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666859838556-2022-10-27T08:37:18.556Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1666925190754-2022-10-28T02:46:30.754Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "artisan",
         "Runtime": "provided.al2",
@@ -245,24 +245,24 @@
         "ArtisanLogGroup"
       ]
     },
-    "WebLambdaVersionjv2qJpJkTf3CHxjsXYDYQUb2OwmWwengELtwaISh2WM": {
+    "WebLambdaVersionMzIg02mZVuBmUx7f7KWVMqC95r9ydxhFPaIWZrFidM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WebLambdaFunction"
         },
-        "CodeSha256": "XBjSdBu7oEV4tyjrVNkXwOwshEeU7fo41GcoV97cQVs="
+        "CodeSha256": "uPBJ+/5E6GdttykV2t4Xk5BauV4PRfdgSJmKfiHpdQM="
       }
     },
-    "ArtisanLambdaVersionaexVEJLn9AsA571ETers95bBQFBEhOBoMJGoHnEmbU": {
+    "ArtisanLambdaVersionnRnabQbirnPJBFnpUiUGqBbUnZTSHiVFBbDMNM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ArtisanLambdaFunction"
         },
-        "CodeSha256": "XBjSdBu7oEV4tyjrVNkXwOwshEeU7fo41GcoV97cQVs="
+        "CodeSha256": "uPBJ+/5E6GdttykV2t4Xk5BauV4PRfdgSJmKfiHpdQM="
       }
     },
     "ArtisanEventsRuleSchedule1": {
@@ -886,7 +886,7 @@
     "WebLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WebLambdaVersionjv2qJpJkTf3CHxjsXYDYQUb2OwmWwengELtwaISh2WM"
+        "Ref": "WebLambdaVersionMzIg02mZVuBmUx7f7KWVMqC95r9ydxhFPaIWZrFidM"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-WebLambdaFunctionQualifiedArn"
@@ -895,7 +895,7 @@
     "ArtisanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ArtisanLambdaVersionaexVEJLn9AsA571ETers95bBQFBEhOBoMJGoHnEmbU"
+        "Ref": "ArtisanLambdaVersionnRnabQbirnPJBFnpUiUGqBbUnZTSHiVFBbDMNM"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-ArtisanLambdaFunctionQualifiedArn"
