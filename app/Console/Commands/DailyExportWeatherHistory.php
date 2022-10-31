@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
-//test commit
 
 class DailyExportWeatherHistory extends Command
 {
