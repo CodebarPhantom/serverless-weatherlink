@@ -208,7 +208,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-weatherlink-apps/dev/1666925190754-2022-10-28T02:46:30.754Z/laravel-weatherlink-apps.zip"
+                "S3Key": "serverless/laravel-weatherlink-apps/dev/1667177895868-2022-10-31T00:58:15.868Z/laravel-weatherlink-apps.zip"
               },
               "Handler": "public/index.php",
               "Runtime": "provided.al2",
@@ -243,7 +243,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-weatherlink-apps/dev/1666925190754-2022-10-28T02:46:30.754Z/laravel-weatherlink-apps.zip"
+                "S3Key": "serverless/laravel-weatherlink-apps/dev/1667177895868-2022-10-31T00:58:15.868Z/laravel-weatherlink-apps.zip"
               },
               "Handler": "artisan",
               "Runtime": "provided.al2",
@@ -272,24 +272,24 @@
               "ArtisanLogGroup"
             ]
           },
-          "WebLambdaVersionMzIg02mZVuBmUx7f7KWVMqC95r9ydxhFPaIWZrFidM": {
+          "WebLambdaVersiondcfQ9bf8e7YBZeC9K0SHj1MUp3umIXgaiF2LyOgA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "WebLambdaFunction"
               },
-              "CodeSha256": "uPBJ+/5E6GdttykV2t4Xk5BauV4PRfdgSJmKfiHpdQM="
+              "CodeSha256": "pf6mpppylFWPpXHHp07HOnk8XoPG+3LVnCtaOYpFFak="
             }
           },
-          "ArtisanLambdaVersionnRnabQbirnPJBFnpUiUGqBbUnZTSHiVFBbDMNM": {
+          "ArtisanLambdaVersionLVyenZn8YjzO9pB3QJUkXF6Di1VirSOoMfulRWYs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ArtisanLambdaFunction"
               },
-              "CodeSha256": "uPBJ+/5E6GdttykV2t4Xk5BauV4PRfdgSJmKfiHpdQM="
+              "CodeSha256": "pf6mpppylFWPpXHHp07HOnk8XoPG+3LVnCtaOYpFFak="
             }
           },
           "ArtisanEventsRuleSchedule1": {
@@ -910,7 +910,7 @@
           "WebLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "WebLambdaVersionMzIg02mZVuBmUx7f7KWVMqC95r9ydxhFPaIWZrFidM"
+              "Ref": "WebLambdaVersiondcfQ9bf8e7YBZeC9K0SHj1MUp3umIXgaiF2LyOgA"
             },
             "Export": {
               "Name": "sls-laravel-weatherlink-apps-dev-WebLambdaFunctionQualifiedArn"
@@ -919,7 +919,7 @@
           "ArtisanLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ArtisanLambdaVersionnRnabQbirnPJBFnpUiUGqBbUnZTSHiVFBbDMNM"
+              "Ref": "ArtisanLambdaVersionLVyenZn8YjzO9pB3QJUkXF6Di1VirSOoMfulRWYs"
             },
             "Export": {
               "Name": "sls-laravel-weatherlink-apps-dev-ArtisanLambdaFunctionQualifiedArn"
@@ -1101,7 +1101,7 @@
         "memory": 1024,
         "runtime": "provided.al2",
         "vpc": {},
-        "versionLogicalId": "WebLambdaVersionMzIg02mZVuBmUx7f7KWVMqC95r9ydxhFPaIWZrFidM"
+        "versionLogicalId": "WebLambdaVersiondcfQ9bf8e7YBZeC9K0SHj1MUp3umIXgaiF2LyOgA"
       },
       "artisan": {
         "handler": "artisan",
@@ -1132,7 +1132,7 @@
         "memory": 1024,
         "runtime": "provided.al2",
         "vpc": {},
-        "versionLogicalId": "ArtisanLambdaVersionnRnabQbirnPJBFnpUiUGqBbUnZTSHiVFBbDMNM"
+        "versionLogicalId": "ArtisanLambdaVersionLVyenZn8YjzO9pB3QJUkXF6Di1VirSOoMfulRWYs"
       }
     },
     "resources": {
@@ -1736,7 +1736,7 @@
     "artifact": "C:\\Eryan\\Coding\\laravel\\weatherlink-apps\\.serverless\\laravel-weatherlink-apps.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/laravel-weatherlink-apps/dev/1666925190754-2022-10-28T02:46:30.754Z",
+    "artifactDirectoryName": "serverless/laravel-weatherlink-apps/dev/1667177895868-2022-10-31T00:58:15.868Z",
     "artifact": "laravel-weatherlink-apps.zip"
   }
 }

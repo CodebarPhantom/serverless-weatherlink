@@ -52,7 +52,7 @@ class DailyExportWeatherHistory extends Command
         try {
 
             $weatherHistoryReport = new WeatherHistoryReport();
-            $weatherHistoryReport->name = "Report Cuaca {$now}";
+            $weatherHistoryReport->name = "Weather Report {$now}";
             $weatherHistoryReport->path_s3 = $path;
             $weatherHistoryReport->save();
 
