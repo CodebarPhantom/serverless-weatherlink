@@ -181,7 +181,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1667177895868-2022-10-31T00:58:15.868Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1667180167476-2022-10-31T01:36:07.476Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2",
@@ -216,7 +216,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-weatherlink-apps/dev/1667177895868-2022-10-31T00:58:15.868Z/laravel-weatherlink-apps.zip"
+          "S3Key": "serverless/laravel-weatherlink-apps/dev/1667180167476-2022-10-31T01:36:07.476Z/laravel-weatherlink-apps.zip"
         },
         "Handler": "artisan",
         "Runtime": "provided.al2",
@@ -245,30 +245,30 @@
         "ArtisanLogGroup"
       ]
     },
-    "WebLambdaVersiondcfQ9bf8e7YBZeC9K0SHj1MUp3umIXgaiF2LyOgA": {
+    "WebLambdaVersionoYGMCuXgblKt5oy0jUeplQOwHxLAuRHxbtWklp50": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WebLambdaFunction"
         },
-        "CodeSha256": "pf6mpppylFWPpXHHp07HOnk8XoPG+3LVnCtaOYpFFak="
+        "CodeSha256": "Yc7P60ioTSxg5zl2RjuBeL8d26jVCCUyq1/C7g9arhM="
       }
     },
-    "ArtisanLambdaVersionLVyenZn8YjzO9pB3QJUkXF6Di1VirSOoMfulRWYs": {
+    "ArtisanLambdaVersion4DKBlap7PtAHaf1nDbEhZWI4PY28BzeJhnwJdIebA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ArtisanLambdaFunction"
         },
-        "CodeSha256": "pf6mpppylFWPpXHHp07HOnk8XoPG+3LVnCtaOYpFFak="
+        "CodeSha256": "Yc7P60ioTSxg5zl2RjuBeL8d26jVCCUyq1/C7g9arhM="
       }
     },
     "ArtisanEventsRuleSchedule1": {
       "Type": "AWS::Events::Rule",
       "Properties": {
-        "ScheduleExpression": "rate(6 minutes)",
+        "ScheduleExpression": "rate(5 minutes)",
         "State": "ENABLED",
         "Targets": [
           {
@@ -306,7 +306,7 @@
     "ArtisanEventsRuleSchedule2": {
       "Type": "AWS::Events::Rule",
       "Properties": {
-        "ScheduleExpression": "cron(5 0 * * ? *)",
+        "ScheduleExpression": "cron(6 0 * * ? *)",
         "State": "ENABLED",
         "Targets": [
           {
@@ -886,7 +886,7 @@
     "WebLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WebLambdaVersiondcfQ9bf8e7YBZeC9K0SHj1MUp3umIXgaiF2LyOgA"
+        "Ref": "WebLambdaVersionoYGMCuXgblKt5oy0jUeplQOwHxLAuRHxbtWklp50"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-WebLambdaFunctionQualifiedArn"
@@ -895,7 +895,7 @@
     "ArtisanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ArtisanLambdaVersionLVyenZn8YjzO9pB3QJUkXF6Di1VirSOoMfulRWYs"
+        "Ref": "ArtisanLambdaVersion4DKBlap7PtAHaf1nDbEhZWI4PY28BzeJhnwJdIebA"
       },
       "Export": {
         "Name": "sls-laravel-weatherlink-apps-dev-ArtisanLambdaFunctionQualifiedArn"
