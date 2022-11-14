@@ -54,7 +54,8 @@ functions:
             - ${bref:layer.console} # The "console" layer
         events:
           - schedule:
-              rate: rate(5 minutes)
+              #rate: rate(5 minutes)
+              rate: cron(*/6 * * * ? *)
               input: '"weatherlink-api:current-weather"'
           - schedule:
               rate: cron(6 0 * * ? *)

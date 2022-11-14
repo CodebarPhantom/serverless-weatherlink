@@ -45,21 +45,31 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
     public function handle()
     {
         $suryaciptaStasion = 140323;
-        $currentUnixEpochTime = Carbon::now()->timestamp;
-        // $startTime =1665565200; for historic period
-        // $endTime =1665568800;
-        // $request = Http::get(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime,$startTime,$endTime)}");
-        $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}");
+        $now = Carbon::now();
+        $currentUnixEpochTime = $now->copy()->timestamp;
+        $pastUnixEpochTime = $now->copy()->subMinutes(6)->timestamp;
+
+        $startTime = $pastUnixEpochTime; //for historic period
+        $endTime = $currentUnixEpochTime ;
+        $request = Http::get(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime,$startTime,$endTime)}");
+        //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
         $response = json_decode($request->getBody());
+        //dd($response->sensors[0]);
+        foreach ($response->sensors as $dataWeahterHistories) {
+           dd( $dataWeahterHistories->data[0]->ts);
+        }
 
         DB::beginTransaction();
         try {
+            dd($response->sensors);
 
-            $weatherHistory = new WeatherHistory();
-            $weatherHistory->master_stasion_id = $suryaciptaStasion;
-            $weatherHistory->unix_epoch_time = $response->sensors[0]->data[0]->ts;
-            $weatherHistory->rain_rate_hi_mm = $response->sensors[0]->data[0]->rain_rate_mm;
-            $weatherHistory->save();
+            foreach ($response->sensors as $dataWeahterHistories) {
+                $weatherHistory = new WeatherHistory();
+                $weatherHistory->master_stasion_id = $suryaciptaStasion;
+                $weatherHistory->unix_epoch_time = $dataWeahterHistories->data[0]->ts;
+                $weatherHistory->rain_rate_hi_mm = $dataWeahterHistories->data[0]->rain_rate_hi_mm;
+                $weatherHistory->save();
+            }
 
         } catch (Exception $e) {
             DB::rollBack();
