@@ -55,9 +55,6 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
         $response = json_decode($request->getBody());
         //dd($response->sensors[0]);
-        foreach ($response->sensors as $dataWeahterHistories) {
-           dd( $dataWeahterHistories->data[0]->ts);
-        }
 
         DB::beginTransaction();
         try {
