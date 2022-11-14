@@ -58,7 +58,6 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
 
         DB::beginTransaction();
         try {
-            dd($response->sensors);
 
             foreach ($response->sensors as $dataWeahterHistories) {
                 $weatherHistory = new WeatherHistory();
