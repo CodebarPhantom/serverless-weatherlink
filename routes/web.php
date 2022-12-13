@@ -21,6 +21,9 @@ Route::get('/', function () {
     ]);
 });
 
+//Route::get('/',[WeatherHistoryReportController::class,'dashboard']);
+
+
 Route::as('weather-history.')->group(function(){
     Route::get('/report',[WeatherHistoryReportController::class,'index'])->name('report');
     Route::post('/report/data',[WeatherHistoryReportController::class,'data'])->name('report-data');

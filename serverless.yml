@@ -55,7 +55,7 @@ functions:
         events:
           - schedule:
               #rate: rate(5 minutes)
-              rate: cron(*/6 * * * ? *)
+              rate: cron(*/5 * * * ? *)
               input: '"weatherlink-api:current-weather"'
           - schedule:
               rate: cron(6 0 * * ? *)

@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\WeatherHistoryReport;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Traits\APISignatureWeatherlink;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+
+
 
 class WeatherHistoryReportController extends Controller
 {
+    use APISignatureWeatherlink;
+
     public function index()
     {
         return view('weather-history.report');
@@ -25,5 +32,18 @@ class WeatherHistoryReportController extends Controller
         })
         ->rawColumns(['path_s3'])
         ->make(true);
+    }
+
+    public function dashboard()
+    {
+        $suryaciptaStasion = 140323;
+        $now = Carbon::now();
+        $currentUnixEpochTime = $now->copy()->timestamp;
+        $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
+        $response = json_decode($request->getBody());
+
+        $last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
+
+        return view('welcome',compact('last_rain_rate'));
     }
 }
