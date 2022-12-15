@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "bref/bref": "^1.7",
         "bref/laravel-bridge": "^1.2",
+        "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "jenssegers/mongodb": "^3.9",
         "laravel/framework": "^9.19",

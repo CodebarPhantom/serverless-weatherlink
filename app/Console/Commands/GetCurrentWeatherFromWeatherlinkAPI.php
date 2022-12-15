@@ -8,6 +8,8 @@ use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
 use App\Models\WeatherHistory;
 use DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\MasterConfig;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
@@ -54,23 +56,33 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         $request = Http::get(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime,$startTime,$endTime)}");
         //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
         $response = json_decode($request->getBody());
-        //dd($response->sensors[0]);
+        dd($response->sensors[0]);
 
         DB::beginTransaction();
         try {
 
-            foreach ($response->sensors as $dataWeahterHistories) {
-                $weatherHistory = new WeatherHistory();
-                $weatherHistory->master_stasion_id = $suryaciptaStasion;
-                $weatherHistory->unix_epoch_time = $dataWeahterHistories->data[0]->ts;
-                $weatherHistory->rain_rate_hi_mm = $dataWeahterHistories->data[0]->rain_rate_hi_mm;
-                $weatherHistory->save();
+
+            if($response->sensors){
+                foreach ($response->sensors as $dataWeahterHistories) {
+                    $weatherHistory = new WeatherHistory();
+                    $weatherHistory->master_stasion_id = $suryaciptaStasion;
+                    $weatherHistory->unix_epoch_time = $dataWeahterHistories->data[0]->ts;
+                    $weatherHistory->rain_rate_hi_mm = $dataWeahterHistories->data[0]->rain_rate_hi_mm;
+                    $weatherHistory->save();
+
+                    $unixEpochTimeTemp = $weatherHistory->unix_epoch_time; // get last timestamp
+                }
+
+                MasterConfig::whereId('LAST_UPDATE_API_TIME')->update(['value' => $unixEpochTimeTemp]);
+
+
+            }else{
+                Log::error('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
             }
 
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            return abort(500);
         }
         DB::commit();
     }
