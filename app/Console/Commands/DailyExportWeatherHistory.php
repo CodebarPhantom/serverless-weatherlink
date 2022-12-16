@@ -48,7 +48,7 @@ class DailyExportWeatherHistory extends Command
             'visibility' => 'public',
         ]);
 
-        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report 17-12-2022")->first();
+        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$now}")->first();
 
         !empty($checkReportNameExists) ?
             $weatherHistoryReport  =  $checkReportNameExists
