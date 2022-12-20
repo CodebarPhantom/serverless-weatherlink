@@ -4,9 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Microsoft\Graph\Graph;
-use microsoft\Graph\Model;
-use App\TokenStore\TokenCache;
 use Carbon\Carbon;
 use App\Models\MasterConfig;
 use App\Models\MasterEmailSend;
@@ -61,12 +58,13 @@ class RainNotification extends Command
 
 
         $lastRainRate = WeatherHistory::orderBy('unix_epoch_time','desc')->first()->rain_rate_hi_mm;
-        if($lastRainRate > 0){
+        $rainTreshold = MasterConfig::whereId('RAIN_RATE_THRESHOLD')->first()->value;
+        if($lastRainRate >= $rainTreshold ){
 
-            $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(1)->get();
+            $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)->get();
             $formatRecipients = [];
-            foreach ($getEmailRecipients as $getEmailRecipient){
 
+            foreach ($getEmailRecipients as $getEmailRecipient){
                 $formatRecipients[] = [
                     "emailAddress"=> [
                         "address"=> $getEmailRecipient->email
@@ -142,8 +140,5 @@ class RainNotification extends Command
             ],
               "saveToSentItems"=> "false"
         ];
-
-
-
     }
 }
