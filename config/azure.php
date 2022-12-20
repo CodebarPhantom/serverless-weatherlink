@@ -13,4 +13,6 @@ return [
   'authority'         => env('OAUTH_AUTHORITY', 'https://login.microsoftonline.com/common'),
   'authorizeEndpoint' => env('OAUTH_AUTHORIZE_ENDPOINT', '/oauth2/v2.0/authorize'),
   'tokenEndpoint'     => env('OAUTH_TOKEN_ENDPOINT', '/oauth2/v2.0/token'),
+  'userId'            => env('AZURE_USER_ID'),
+  'msgraphUrl'        => env('AZURE_MSGRAPH_URL','https://graph.microsoft.com/v1.0')
 ];
