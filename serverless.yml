@@ -63,7 +63,7 @@ functions:
               input: '"weatherlink-api:daily-export-weather-history"'
           - schedule:
               #rate: cron(6 0 * * ? *)
-              rate: cron(*/5 * * * ? *)
+              rate: cron(*/6 * * * ? *)
               input: '"ms-graph:rain-notification"'
 
 plugins:

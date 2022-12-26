@@ -79,11 +79,11 @@ class RainNotification extends Command
             $accessToken = $this->signin()->access_token;
             $request = Http::acceptJson()
                 ->withToken($accessToken)
-                ->withBody(json_encode($this->arrayTemplateEmail($lastRainRate, $averageRainRate,$now->format("D, d F Y H:i"),$formatRecipients)), 'application/json')
+                ->withBody(json_encode($this->arrayTemplateEmail($lastRainRate, $averageRainRate,$now->locale('id')->translatedFormat("D, d F Y H:i"),$formatRecipients)), 'application/json')
                 ->post(config("azure.msgraphUrl")."/users/".config("azure.userId")."/sendMail");
 
 
-            $response = json_decode($request->status());
+            //$response = json_decode($request->status());
         }
         return;
     }
@@ -106,7 +106,7 @@ class RainNotification extends Command
         $year = date("Y");
         return [
             "message"=>[
-                "subject"=> "Rata-rata Curah Hujan 30 Menit Terakhir di Kawasan Suryacipta",
+                "subject"=> "Informasi Curah Hujan di Kawasan Suryacipta",
                 "body"=> [
                   "contentType"=> "HTML",
                   "content"=>
@@ -116,13 +116,13 @@ class RainNotification extends Command
                     </head>
                   <body>
                     <p>
-                        Halo, <br/><br/>
-                        Pesan otomatis ini di hasilkan oleh IT Intelligence API untuk memberitahukan rata-rata curah hujan 30 menit terakhir pada kawasan Suryacipta berikut adalah rincinannya:
+                        Halo Estate Team,  <br/>
+                        Pesan otomatis ini dikirimkan oleh system untuk memberitahukan informasi curah hujan tinggi beserta rata-rata curah hujan 30 menit terakhir pada kawasan Suryacipta:
                     </p>
                     <p>
                         Curah hujan terakhir: <b>{$lastRainRate} mm/hr</b> <br/>
                         Rata-rata curah hujan 30 menit terakhir: <b>{$avereageRainRate} mm/hr</b><br/>
-                        Timestamp: $dateTime
+                        Waktu: $dateTime
                     </p>
                     <p>PT Suryacipta Swadaya - IT Division &#169; {$year} </p>
                   </body>
