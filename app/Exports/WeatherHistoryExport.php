@@ -18,10 +18,8 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
     public function view(): View
     {
         $now = Carbon::now();
-        //$now = Carbon::parse("2022-12-27 00:00:27");
         $hoursNow = $now->copy()->format("H");
         $minutesNow = $now->copy()->format("i");
-        //dd($hoursNow, $minutesNow);
 
         if((int)$hoursNow === 0 && (int)$minutesNow === 0){
             $start = $now->copy()->subDay()->startOfDay()->timestamp;
@@ -30,9 +28,6 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
             $start =  $now->copy()->startOfDay()->timestamp;
             $end =  $now->copy()->endOfDay()->timestamp;
         }
-
-        // $start = Carbon::now()->startOfDay()->timestamp;
-        // $end = Carbon::now()->endOfDay()->timestamp;
 
         $datas = WeatherHistory::where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)
