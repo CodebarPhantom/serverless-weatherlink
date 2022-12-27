@@ -42,13 +42,25 @@ class DailyExportWeatherHistory extends Command
      */
     public function handle()
     {
-        $now = carbon::now()->format('d-m-Y');
-        $path = "weather-history/{$now}_WeatherHistory.xlsx";
+        $now = carbon::now();
+        //$now = Carbon::parse("2022-12-27 00:00:27");
+        $hoursNow = $now->copy()->format("H");
+        $minutesNow = $now->copy()->format("i");
+
+        if((int)$hoursNow === 0 && (int)$minutesNow === 0){
+            $reportDate = $now->copy()->subDay()->format('d-m-Y');
+        }else{
+            $reportDate = $now->copy()->format('d-m-Y');
+        }
+
+
+
+        $path = "weather-history/{$reportDate}_WeatherHistory.xlsx";
         Excel::store(new WeatherHistoryExport, $path, 's3_public', null, [
             'visibility' => 'public',
         ]);
 
-        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$now}")->first();
+        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$reportDate}")->first();
 
         !empty($checkReportNameExists) ?
             $weatherHistoryReport  =  $checkReportNameExists
@@ -57,7 +69,7 @@ class DailyExportWeatherHistory extends Command
         DB::beginTransaction();
         try {
 
-            $weatherHistoryReport->name = "Weather Report {$now}";
+            $weatherHistoryReport->name = "Weather Report {$reportDate}";
             $weatherHistoryReport->path_s3 = $path;
             $weatherHistoryReport->save();
 
