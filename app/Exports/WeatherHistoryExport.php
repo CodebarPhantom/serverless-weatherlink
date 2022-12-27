@@ -23,7 +23,7 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
 
         $datas = WeatherHistory::where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)
-        ->orderBy('unix_epoch_time','desc')->get();
+        ->orderBy('unix_epoch_time','asc')->get();
 
 
         return view('exports.weather-history-template',compact('datas'));
