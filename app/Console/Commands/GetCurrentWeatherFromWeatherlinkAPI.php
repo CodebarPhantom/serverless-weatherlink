@@ -8,10 +8,8 @@ use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
 use App\Models\WeatherHistory;
 use DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\MasterConfig;
 use Exception;
-use Throwable;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
