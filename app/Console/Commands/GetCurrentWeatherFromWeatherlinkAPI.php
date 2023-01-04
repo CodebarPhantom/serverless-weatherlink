@@ -3,15 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
 use App\Models\WeatherHistory;
 use DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\MasterConfig;
 use Exception;
-use Throwable;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
@@ -57,7 +54,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         $endTime = $currentUnixEpochTime ;
         //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
         //$request = Http::get("https://api.weatherlink.com/v2/historic/140323?api-key=grejkxsbo6g3r8rigf8vmzcpc7rkmhl2&t=1671088043&start-timestamp=1671009000&end-timestamp=1671095400&api-signature=0aafe55b22dc67526a53482c6ccee0b0317641d235a1c9fc7647c28ac324d1ba");
-        $weatherlinkData = $this->getDataFromAPI($suryaciptaStasion,$currentUnixEpochTime, $startTime,$endTime)->sensors[0]; // langsusng ambil ke sensor 0
+        $weatherlinkData = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $startTime,$endTime)->sensors[0]; // langsusng ambil ke sensor 0
         // /dd($weatherlinkData);
 
         DB::beginTransaction();
@@ -109,14 +106,14 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         }
     }
 
-    private function getDataFromAPI($stasionID, $currentUnixEpochTime, $startTime, $endTime)
-    {
-        $request = Http::get(env('WEATHERLINK_URL')."/historic/{$stasionID}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($stasionID,$currentUnixEpochTime,$startTime,$endTime)}");
-        $response = json_decode($request->getBody());
+    // private function getDataFromAPI($stasionID, $currentUnixEpochTime, $startTime, $endTime)
+    // {
+    //     $request = Http::get(env('WEATHERLINK_URL')."/historic/{$stasionID}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&start-timestamp={$startTime}&end-timestamp={$endTime}&api-signature={$this->historicWeatherHMAC($stasionID,$currentUnixEpochTime,$startTime,$endTime)}");
+    //     $response = json_decode($request->getBody());
 
-        return $response;
+    //     return $response;
 
-    }
+    // }
 
     private function newWeatherHistory($stasionID, $timestamp, $rainRateHiMM, $rainRate)
     {

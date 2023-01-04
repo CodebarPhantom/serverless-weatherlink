@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Dashboard;
 
 use App\Models\WeatherHistoryReport;
-use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Controller;
 
 
 

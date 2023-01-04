@@ -2,7 +2,7 @@
 
 use App\Models\WeatherHistory;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WeatherHistoryReportController;
+use App\Http\Controllers\Web\Dashboard\WeatherHistoryReportController;
 
 /*
 |--------------------------------------------------------------------------
