@@ -8,6 +8,7 @@ use App\Http\Traits\APISignatureWeatherlink;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
+use App\Models\WeatherHistory;
 
 
 
@@ -15,7 +16,7 @@ class WeatherHistoryReportController extends Controller
 {
     use APISignatureWeatherlink;
 
-    public function index()
+    public function report()
     {
         return view('weather-history.report');
     }
@@ -34,16 +35,33 @@ class WeatherHistoryReportController extends Controller
         ->make(true);
     }
 
-    public function dashboard()
+    public function index()
     {
-        $suryaciptaStasion = 140323;
-        $now = Carbon::now();
-        $currentUnixEpochTime = $now->copy()->timestamp;
-        $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
-        $response = json_decode($request->getBody());
+        // $suryaciptaStasion = 140323;
+        // $now = Carbon::now();
+        // $currentUnixEpochTime = $now->copy()->timestamp;
+        // $request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
+        // $response = json_decode($request->getBody());
+        //$last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
 
-        $last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
+        $last_rain_rate = WeatherHistory::orderBy('created_at','desc')->first()->rain_rate_hi_mm;
+        $last_30minutes_rain_rates = WeatherHistory::latest()->take(6)->get();
 
-        return view('welcome',compact('last_rain_rate'));
+        $datas = $last_30minutes_rain_rates->reverse();
+        //$_rain_rate_hi_mm_datas = $last_30minutes_rain_rates->pluck('rain_rate_hi_mm')->reverse();
+        //$_rain_rate_datas = $last_30minutes_rain_rates->pluck('rain_rate')->reverse();
+
+        foreach ($datas as $data) {
+            $labels[] = Carbon::createFromTimestamp($data->unix_epoch_time)->format('H:i');
+            $rain_rate_hi_mm_datas[] = $data->rain_rate_hi_mm;
+            $rain_rate_datas[] = $data->rain_rate;
+
+        }
+
+
+
+        //dd($labels,$rain_rate_hi_mm_datas, $rain_rate_datas);
+
+        return view('welcome',compact('last_rain_rate','labels','rain_rate_hi_mm_datas','rain_rate_datas'));
     }
 }

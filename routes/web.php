@@ -15,16 +15,14 @@ use App\Http\Controllers\Web\Dashboard\WeatherHistoryReportController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome',[
-        'last_rain_rate' => WeatherHistory::orderBy('created_at','desc')->first()
-    ]);
-});
+// Route::get('/', function () {
+//     return view('welcome',[
+//         'last_rain_rate' => WeatherHistory::orderBy('created_at','desc')->first()->rain_rate_hi_mm
+//     ]);
+// });
 
-//Route::get('/',[WeatherHistoryReportController::class,'dashboard']);
-
-
+Route::get('/',[WeatherHistoryReportController::class,'index']);
 Route::as('weather-history.')->group(function(){
-    Route::get('/report',[WeatherHistoryReportController::class,'index'])->name('report');
+    Route::get('/report',[WeatherHistoryReportController::class,'report'])->name('report');
     Route::post('/report/data',[WeatherHistoryReportController::class,'data'])->name('report-data');
 });

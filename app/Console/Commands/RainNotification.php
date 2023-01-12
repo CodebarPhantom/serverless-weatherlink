@@ -124,6 +124,10 @@ class RainNotification extends Command
                         Rata-rata curah hujan 30 menit terakhir: <b>{$avereageRainRate} mm/hr</b><br/>
                         Waktu: $dateTime
                     </p>
+
+                    <p>
+                        Dashboard dapat diakses pada <a href='https://weather.suryacipta.com/'>https://weather.suryacipta.com/</a>
+                    </p>
                     <p>PT Suryacipta Swadaya - IT Division &#169; {$year} </p>
                   </body>
                   </html>

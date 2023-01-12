@@ -22,7 +22,7 @@
             }
         </style>
     </head>
-    <body onload="zoom()">
+    <body>
         <!-- Responsive navbar-->
 
         <!-- Header - set the background image for the header in the line below-->
@@ -30,8 +30,7 @@
             <div class="row">
                 <div class="col-4" style="background-color: #0e394b;">
                     <h3 class="text-header">
-                        <strong>{{ "Rain Rate $last_rain_rate->rain_rate_hi_mm (mm)"  }}</strong>
-                        {{-- $last_rain_rate->rain_rate_hi_mm  --}}
+                        <strong>{{ "Rain Rate $last_rain_rate(mm)"  }}</strong>
                     </h3>
                 </div>
                 <div class="col-4" style="background-color: #0e394b;">
@@ -45,7 +44,7 @@
 
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-7">
                     <iframe
                         src="https://www.weatherlink.com/embeddablePage/show/86da60c806c44759b79af156b6648793/fullscreen"
                         style="
@@ -59,16 +58,82 @@
                             padding: 0;
                             overflow: hidden;
                             z-index: 999999;
-                            height: 99vh;
+                            height: 100vh;
                         ">
                     </iframe>
                 </div>
+                <div class="col-5" style="margin: auto;">
+                    <canvas  id="myChart" height="100%"></canvas>
+                </div>
             </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
         <script type="text/javascript">
-            function zoom() {
-                document.body.style.zoom = "90%"
+
+        const labels = {{ Js::from($labels) }};
+        const data = {
+        labels: labels,
+            datasets: [
+                {
+                    label: 'Rain Rate (mm)',
+                    data: {{ Js::from($rain_rate_hi_mm_datas) }},
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    borderSkipped: false,
+                    minBarLength: 7,
+                },
+                {
+                    label: 'Rain Fall (mm)',
+                    data: {{ Js::from($rain_rate_datas) }},
+                    borderColor: "#34ace0",
+                    backgroundColor: "#34ace0",
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    borderSkipped: false,
+                    minBarLength: 7,
+                }
+            ]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                devicePixelRatio: 2,
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Value'
+                    },
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        // forces step size to be 50 units
+                        stepSize: 50
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Grafik Curah Hujan'
+                    }
+                }
             }
+        };
+
+        new Chart(
+            document.getElementById('myChart'),
+            config
+        );
         </script>
     </body>
 </html>
