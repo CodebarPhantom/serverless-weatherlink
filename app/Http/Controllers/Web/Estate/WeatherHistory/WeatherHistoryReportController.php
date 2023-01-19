@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\Dashboard;
+namespace App\Http\Controllers\Web\Estate\WeatherHistory;
 
 use App\Models\WeatherHistoryReport;
 use Yajra\DataTables\DataTables;
@@ -18,7 +18,7 @@ class WeatherHistoryReportController extends Controller
 
     public function report()
     {
-        return view('weather-history.report');
+        return view('estate.weather-history.report');
     }
 
     public function data()
@@ -62,6 +62,6 @@ class WeatherHistoryReportController extends Controller
 
         //dd($labels,$rain_rate_hi_mm_datas, $rain_rate_datas);
 
-        return view('welcome',compact('last_rain_rate','labels','rain_rate_hi_mm_datas','rain_rate_datas'));
+        return view('estate.weather-history.index',compact('last_rain_rate','labels','rain_rate_hi_mm_datas','rain_rate_datas'));
     }
 }

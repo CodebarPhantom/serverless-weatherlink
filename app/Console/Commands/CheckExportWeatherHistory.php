@@ -9,21 +9,21 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
 
-class DailyExportWeatherHistory extends Command
+class CheckExportWeatherHistory extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'weatherlink-api:daily-export-weather-history';
+    protected $signature = 'weatherlink-api:check-export-weather-history';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Export from DB to Excel Weather History';
+    protected $description = 'Export from DB to Excel Weather History Yesterday Check ';
 
     /**
      * Create a new command instance.
@@ -42,18 +42,11 @@ class DailyExportWeatherHistory extends Command
      */
     public function handle()
     {
-        $now = carbon::now();
-        //$now = Carbon::parse("2022-12-27 00:00:27");
-        $hoursNow = $now->copy()->format("H");
-        $minutesNow = $now->copy()->format("i");
-
-        if((int)$hoursNow === 0 && (int)$minutesNow === 0){
-            $reportDate = $now->copy()->subDay()->format('d-m-Y');
-        }else{
-            $reportDate = $now->copy()->format('d-m-Y');
-        }
-
-
+        $now = carbon::now()->subDay()->endOfDay();
+        //$now = Carbon::parse("2023-01-09")->endOfDay();
+        //$hoursNow = $now->copy()->format("H");
+        //$minutesNow = $now->copy()->format("i");
+        $reportDate = $now->copy()->format('d-m-Y');
 
         $path = "weather-history/{$reportDate}_WeatherHistory.xlsx";
         Excel::store(new WeatherHistoryExport($now), $path, 's3_public', null, [

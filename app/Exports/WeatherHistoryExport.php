@@ -14,12 +14,19 @@ use Carbon\Carbon;
 
 class WeatherHistoryExport implements FromView //FromQuery, WithMapping
 {
+    public $date;
+
+    function __construct($date) {
+        $this->date = $date;
+    }
 
     public function view(): View
     {
-        $now = Carbon::now();
+        //$now = Carbon::now();
+        $now = $this->date; //ambil dari construct
         $hoursNow = $now->copy()->format("H");
         $minutesNow = $now->copy()->format("i");
+
 
         if((int)$hoursNow === 0 && (int)$minutesNow === 0){
             $start = $now->copy()->subDay()->startOfDay()->timestamp;
@@ -28,6 +35,8 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
             $start =  $now->copy()->startOfDay()->timestamp;
             $end =  $now->copy()->endOfDay()->timestamp;
         }
+
+        // dd($now, $hoursNow, $minutesNow,$start,$end);
 
         $datas = WeatherHistory::where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)

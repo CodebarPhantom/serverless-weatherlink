@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V1;
+namespace App\Http\Controllers\API\V1\Estate;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Traits\APISignatureWeatherlink;

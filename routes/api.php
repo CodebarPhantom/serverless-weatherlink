@@ -1,8 +1,8 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\V1\WeatherlinkController;
+use App\Http\Controllers\API\V1\Estate\WeatherlinkController;
+use App\Http\Controllers\API\V1\MsGraph\Mail\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +20,16 @@ use App\Http\Controllers\API\V1\WeatherlinkController;
 // });
 
 Route::prefix("/v1")->as("v1.")->group(function(){
-    Route::get('/historic',[WeatherlinkController::class,'historic'])->name('historic');
 
+    Route::prefix("/msgraph")->as("ms-graph.")->group(function(){
+        Route::prefix("/mail")->as("mail.")->group(function(){
+            Route::post('/send',[MailController::class,'send'])->name('send');
+        });
+    });
+
+
+
+    Route::prefix("/estate")->as("estate.")->group(function(){
+        Route::get('/weather-historic',[WeatherlinkController::class,'historic'])->name('weather-historic');
+    });
 });

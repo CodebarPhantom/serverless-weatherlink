@@ -79,7 +79,7 @@
         labels: labels,
             datasets: [
                 {
-                    label: 'Rain Rate (mm)',
+                    label: 'Curah Hujan Terakhir (mm)',
                     data: {{ Js::from($rain_rate_hi_mm_datas) }},
                     borderColor: "#ff5252",
                     backgroundColor: "#ff5252",
@@ -89,7 +89,7 @@
                     minBarLength: 2,
                 },
                 {
-                    label: 'Rain Fall (mm)',
+                    label: 'Rata-rata Curah Hujan (mm)',
                     data: {{ Js::from($rain_rate_datas) }},
                     borderColor: "#34ace0",
                     backgroundColor: "#34ace0",
@@ -113,7 +113,7 @@
                         text: 'Value'
                     },
                     min: 0,
-                    max: 100,
+                    max: 200,
                     ticks: {
                         // forces step size to be 50 units
                         stepSize: 50

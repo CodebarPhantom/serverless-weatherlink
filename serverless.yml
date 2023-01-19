@@ -63,8 +63,12 @@ functions:
               input: '"weatherlink-api:daily-export-weather-history"'
           - schedule:
               #rate: cron(6 0 * * ? *)
-              rate: cron(*/6 * * * ? *)
+              rate: cron(1,6,11,16,21,26,31,36,41,46,51,56 * * * ? *)
               input: '"ms-graph:rain-notification"'
+          - schedule:
+            #rate: cron(6 0 * * ? *)
+            rate: cron(15 0 * * * ? *)
+            input: '"weatherlink-api:check-export-weather-history"'
 
 plugins:
     # We need to include the Bref plugin
