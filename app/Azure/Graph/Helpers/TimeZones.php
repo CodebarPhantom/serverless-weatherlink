@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-namespace App\Azure\Graph\Delegate;
+namespace App\Azure\Graph\Helpers;
 
 class TimeZones {
   public static function getTzFromWindows($windowsTimeZone): \DateTimeZone {

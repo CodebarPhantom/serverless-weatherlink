@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Azure\Graph\Delegate; // use as behalf user
+namespace App\Azure\Graph\Helpers; // use as behalf user
 
 class TokenCache {
   public function storeTokens($accessToken, $user) {

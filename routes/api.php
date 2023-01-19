@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\Estate\WeatherlinkController;
 use App\Http\Controllers\API\V1\MsGraph\Mail\MailController;
+use App\Http\Controllers\API\V1\MsGraph\Calendar\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,9 @@ Route::prefix("/v1")->as("v1.")->group(function(){
     Route::prefix("/msgraph")->as("ms-graph.")->group(function(){
         Route::prefix("/mail")->as("mail.")->group(function(){
             Route::post('/send',[MailController::class,'send'])->name('send');
+        });
+        Route::prefix("/calendar")->as("calendar.")->group(function(){
+            Route::post('/create-event',[CalendarController::class,'createEvent'])->name('create-event');
         });
     });
 

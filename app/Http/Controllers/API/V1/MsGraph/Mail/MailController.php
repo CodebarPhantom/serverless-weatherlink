@@ -13,13 +13,19 @@ class MailController extends ApiController
     {
         $func = function () use ($request){
 
+            $this->validate($request, [
+                "subject" => ["required"],
+                "content" => ["required"],
+                "recipients" => ["required"],
+            ]);
+
             $mail = new Mail();
             $subject = $request->subject;
             $content = $request->content;
             $recipients = $request->recipients;
-            $msGraphSignInResponse = $mail->mailSend($subject, $content, $recipients);
+            $response_code = $mail->mailSend($subject, $content, $recipients);
 
-            $this->data = $msGraphSignInResponse;
+            $this->data = $response_code;
         };
 
         return $this->callFunction($func);
