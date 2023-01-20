@@ -80,7 +80,7 @@
             datasets: [
                 {
                     label: 'Curah Hujan Terakhir (mm)',
-                    data: {{ Js::from($rain_rate_hi_mm_datas) }},
+                    data: {{ Js::from($rain_rate_hi) }},
                     borderColor: "#ff5252",
                     backgroundColor: "#ff5252",
                     borderWidth: 2,
@@ -90,7 +90,7 @@
                 },
                 {
                     label: 'Rata-rata Curah Hujan (mm)',
-                    data: {{ Js::from($rain_rate_datas) }},
+                    data: {{ Js::from($average_rain_rate) }},
                     borderColor: "#34ace0",
                     backgroundColor: "#34ace0",
                     borderWidth: 2,

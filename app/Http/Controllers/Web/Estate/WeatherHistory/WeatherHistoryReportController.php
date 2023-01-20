@@ -45,23 +45,28 @@ class WeatherHistoryReportController extends Controller
         //$last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
 
         $last_rain_rate = WeatherHistory::orderBy('created_at','desc')->first()->rain_rate_hi_mm;
-        $last_30minutes_rain_rates = WeatherHistory::latest()->take(6)->get();
+        $last_30minutes_rain_rates = WeatherHistory::latest()->take(11)->get();
 
         $datas = $last_30minutes_rain_rates->reverse();
-        //$_rain_rate_hi_mm_datas = $last_30minutes_rain_rates->pluck('rain_rate_hi_mm')->reverse();
-        //$_rain_rate_datas = $last_30minutes_rain_rates->pluck('rain_rate')->reverse();
 
         foreach ($datas as $data) {
-            $labels[] = Carbon::createFromTimestamp($data->unix_epoch_time)->format('H:i');
+            $label_array[] = Carbon::createFromTimestamp($data->unix_epoch_time)->format('H:i');
             $rain_rate_hi_mm_datas[] = $data->rain_rate_hi_mm;
-            $rain_rate_datas[] = $data->rain_rate;
+        }
 
+        for($i=0; $i < 6; $i++){
+            $rain_rate_average_array = array_slice($rain_rate_hi_mm_datas, $i, 6);
+            $rain_rate_hi_array = $rain_rate_hi_mm_datas[5+$i];
+            $labels[] = $label_array[5+$i];
+
+
+            $average_rain_rate[] = number_format( array_sum($rain_rate_average_array) / count($rain_rate_average_array),2);
+            $rain_rate_hi[] = $rain_rate_hi_array;
         }
 
 
+       // dd($labels,$average_rain_rate, $rain_rate_hi);
 
-        //dd($labels,$rain_rate_hi_mm_datas, $rain_rate_datas);
-
-        return view('estate.weather-history.index',compact('last_rain_rate','labels','rain_rate_hi_mm_datas','rain_rate_datas'));
+        return view('estate.weather-history.index',compact('last_rain_rate','labels','rain_rate_hi','average_rain_rate'));
     }
 }
