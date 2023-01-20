@@ -55,15 +55,16 @@ functions:
         events:
           - schedule:
               #rate: rate(5 minutes)
-              rate: cron(*/5 * * * ? *)
+              rate: cron(1,6,11,16,21,26,31,36,41,46,51,56 * * * ? *)
               input: '"weatherlink-api:current-weather"'
           - schedule:
               #rate: cron(6 0 * * ? *)
-              rate: cron(*/5 * * * ? *)
+              #rate: cron(*/5 * * * ? *)
+              rate: cron(1,6,11,16,21,26,31,36,41,46,51,56 * * * ? *)
               input: '"weatherlink-api:daily-export-weather-history"'
           - schedule:
               #rate: cron(6 0 * * ? *)
-              rate: cron(1,6,11,16,21,26,31,36,41,46,51,56 * * * ? *)
+              rate: cron(2,7,12,17,22,27,32,37,42,47,52,57 * * * ? *)
               input: '"ms-graph:rain-notification"'
           - schedule:
               #rate: cron(6 0 * * ? *)
