@@ -87,6 +87,17 @@
                     borderRadius: 5,
                     borderSkipped: false,
                     minBarLength: 2,
+
+                },
+                {
+                    label: 'line',
+                    data: {{ Js::from($rain_rate_hi) }},
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
+                    type: 'line',
+                    display: false
+
+
                 },
                 {
                     label: 'Rata-rata Curah Hujan (mm)',
@@ -97,7 +108,19 @@
                     borderRadius: 5,
                     borderSkipped: false,
                     minBarLength: 2,
-                }
+
+
+                },
+                {
+                    label: 'line',
+                    data: {{ Js::from($average_rain_rate) }},
+                    borderColor: "#34ace0",
+                    backgroundColor: "#34ace0",
+                    type: 'line',
+                    display: false
+
+                },
+
             ]
         };
 
@@ -122,7 +145,13 @@
                 plugins: {
                     legend: {
                         position: 'top',
+                        labels: {
+                            filter: function(label) {
+                                if (label.text !== 'line') return true; //only show when the label is cash
+                            }
+                        }
                     },
+
                     title: {
                         display: true,
                         text: 'Grafik Curah Hujan'
