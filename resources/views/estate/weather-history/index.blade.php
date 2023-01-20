@@ -87,17 +87,6 @@
                     borderRadius: 5,
                     borderSkipped: false,
                     minBarLength: 2,
-
-                },
-                {
-                    label: 'line',
-                    data: {{ Js::from($rain_rate_hi) }},
-                    borderColor: "#ff5252",
-                    backgroundColor: "#ff5252",
-                    type: 'line',
-                    display: false
-
-
                 },
                 {
                     label: 'Rata-rata Curah Hujan (mm)',
@@ -108,17 +97,20 @@
                     borderRadius: 5,
                     borderSkipped: false,
                     minBarLength: 2,
-
-
                 },
                 {
-                    label: 'line',
+                    label: 'Rata-rata Curah Hujan',
                     data: {{ Js::from($average_rain_rate) }},
                     borderColor: "#34ace0",
                     backgroundColor: "#34ace0",
+                    type: 'line'
+                },
+                {
+                    label: 'Curah Hujan Terakhir',
+                    data: {{ Js::from($rain_rate_hi) }},
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
                     type: 'line',
-                    display: false
-
                 },
 
             ]
@@ -147,7 +139,7 @@
                         position: 'top',
                         labels: {
                             filter: function(label) {
-                                if (label.text !== 'line') return true; //only show when the label is cash
+                                if (label.text === 'Curah Hujan Terakhir (mm)' || label.text === 'Rata-rata Curah Hujan (mm)') return true; //only show when the label is cash
                             }
                         }
                     },
