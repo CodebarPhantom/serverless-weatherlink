@@ -48,7 +48,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         $suryaciptaStasion = 140323;
         $now = Carbon::now();
         $currentUnixEpochTime = $now->copy()->timestamp;
-        $pastUnixEpochTime = $now->copy()->subMinutes(11)->timestamp;
+        $pastUnixEpochTime = $now->copy()->subMinutes(13)->timestamp;
 
         $startTime = $pastUnixEpochTime; //for historic period
         $endTime = $currentUnixEpochTime ;
