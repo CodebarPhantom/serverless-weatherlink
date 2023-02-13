@@ -68,10 +68,11 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                 if ($lastTimestampWeatherlink !== $lastTimestampDB){
 
                     $tempLastTimestampDB = $lastTimestampDB;
+                    $maxTime = $tempLastTimestampDB+86400;
 
                     while( $tempLastTimestampDB < $endTime){
 
-                        $weatherlinkDataBatch = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $tempLastTimestampDB, $tempLastTimestampDB+=86400)->sensors[0]; //get lagi data ke API dengan parameter baru dan langsung ke sensor 0
+                        $weatherlinkDataBatch = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $tempLastTimestampDB, $maxTime)->sensors[0]; //get lagi data ke API dengan parameter baru dan langsung ke sensor 0
                         //dd($weatherlinkDataBatch);
                         foreach ($weatherlinkDataBatch->data as $data) {
                             $this->newWeatherHistory(
@@ -84,6 +85,8 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                         }
 
                         $tempLastTimestampDB += 86400; //langsung tambah 24jam wkwkwk
+                        $maxTime += 86400; //langsung tambah 24jam wkwkwk
+
                     }
                     MasterConfig::whereId('LAST_TIMESTAMP_WEATHERLINK')->update(['value' => $tempUpdateTimestamp]);
                 }else{
