@@ -36,7 +36,7 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
             $end =  $now->copy()->endOfDay()->timestamp;
         }
 
-        // dd($now, $hoursNow, $minutesNow,$start,$end);
+        //dd($now, $hoursNow, $minutesNow,$start,$end);
 
         $datas = WeatherHistory::where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)

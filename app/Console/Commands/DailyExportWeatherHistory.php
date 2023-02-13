@@ -43,7 +43,7 @@ class DailyExportWeatherHistory extends Command
     public function handle()
     {
         $now = carbon::now();
-        //$now = Carbon::parse("2022-12-27 00:00:27");
+        //$now = Carbon::parse("2023-02-14 00:00:27"); // untuk generata hari sbelumnya harus h+1
         $hoursNow = $now->copy()->format("H");
         $minutesNow = $now->copy()->format("i");
 

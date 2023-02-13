@@ -55,7 +55,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
         //$request = Http::get("https://api.weatherlink.com/v2/historic/140323?api-key=grejkxsbo6g3r8rigf8vmzcpc7rkmhl2&t=1671088043&start-timestamp=1671009000&end-timestamp=1671095400&api-signature=0aafe55b22dc67526a53482c6ccee0b0317641d235a1c9fc7647c28ac324d1ba");
         $weatherlinkData = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $startTime,$endTime)->sensors[0]; // langsusng ambil ke sensor 0
-        // /dd($weatherlinkData);
+        //dd($weatherlinkData);
 
         DB::beginTransaction();
         try {
@@ -70,8 +70,9 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                     $tempLastTimestampDB = $lastTimestampDB;
 
                     while( $tempLastTimestampDB < $endTime){
-                        $weatherlinkDataBatch = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $tempLastTimestampDB, $endTime)->sensors[0]; //get lagi data ke API dengan parameter baru dan langsung ke sensor 0
 
+                        $weatherlinkDataBatch = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $tempLastTimestampDB, $tempLastTimestampDB+=86400)->sensors[0]; //get lagi data ke API dengan parameter baru dan langsung ke sensor 0
+                        //dd($weatherlinkDataBatch);
                         foreach ($weatherlinkDataBatch->data as $data) {
                             $this->newWeatherHistory(
                                 $suryaciptaStasion,
