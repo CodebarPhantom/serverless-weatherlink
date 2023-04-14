@@ -4,7 +4,9 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="author" content="Eryan Fauzan" />
+        <meta name="robots" content="noindex, nofollow" />
+
         <title>Dashboard - Weatherlink Suryacipta</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="https://suryacipta.com/wp-content/uploads/2021/09/va.png" />

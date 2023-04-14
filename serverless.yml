@@ -102,3 +102,5 @@ constructs:
       # Other Headers (e.g. Livewire, Laravel Nova), uncomment based on your needs
       # - X-Livewire
       # - X-Inertia
+    domain: weather.suryacipta.com
+    certificate: arn:aws:acm:us-east-1:910217798216:certificate/cbe13c53-2cee-4d43-bf5b-1559f26223d6
