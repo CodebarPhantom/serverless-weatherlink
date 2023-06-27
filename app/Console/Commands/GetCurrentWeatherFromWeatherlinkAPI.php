@@ -9,6 +9,7 @@ use App\Models\WeatherHistory;
 use DB;
 use App\Models\MasterConfig;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
@@ -45,7 +46,9 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
      */
     public function handle()
     {
-        $suryaciptaStasion = 140323;
+        //$suryaciptaStasion = 140323;
+        $suryaciptaStasion = "a4fbe3c8-a74d-4363-aeac-7d2de710cce2";
+
         $now = Carbon::now();
         $currentUnixEpochTime = $now->copy()->timestamp;
         $pastUnixEpochTime = $now->copy()->subMinutes(13)->timestamp;
@@ -53,9 +56,20 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         $startTime = $pastUnixEpochTime; //for historic period
         $endTime = $currentUnixEpochTime ;
         //$request = Http::get(env('WEATHERLINK_URL')."/current/{$suryaciptaStasion}?api-key=".env('WEATHERLINK_API_KEY')."&t={$currentUnixEpochTime}&api-signature={$this->currentWeatherHMAC($suryaciptaStasion,$currentUnixEpochTime)}"); //for current
-        //$request = Http::get("https://api.weatherlink.com/v2/historic/140323?api-key=grejkxsbo6g3r8rigf8vmzcpc7rkmhl2&t=1671088043&start-timestamp=1671009000&end-timestamp=1671095400&api-signature=0aafe55b22dc67526a53482c6ccee0b0317641d235a1c9fc7647c28ac324d1ba");
-        $weatherlinkData = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $startTime,$endTime)->sensors[0]; // langsusng ambil ke sensor 0
-        //dd($weatherlinkData);
+        //$request = Http::get("https://api.weatherlink.com/v2/historic/140323?api-key=grejkxsbo6g3r8rigf8vmzcpc7rkmhl2&t=1687840873&start-timestamp=1687798800&end-timestamp=1687885199&api-signature=577b9a7a55ae1d7848ae6b1c6b4676aa2700d1b1de009ace2131d3287a4ebee8");
+        //dd(env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}");
+        $request = Http::withHeaders([
+            'X-Api-Secret' => env('WEATHERLINK_API_SECRET')
+        ])->get( env('WEATHERLINK_URL')."/historic/{$suryaciptaStasion}",[
+                'api-key' => env('WEATHERLINK_API_KEY'),
+                'station-id' => $suryaciptaStasion,
+                'start-timestamp' =>  $startTime,
+                'end-timestamp' => $endTime
+        ]);
+        //$weatherlinkData = $this->getDataFromAPI($suryaciptaStasion, $currentUnixEpochTime, $startTime,$endTime)->sensors[0]; // langsusng ambil ke sensor 0
+        //$response = json_decode($request->getBody());
+        $weatherlinkData = json_decode($request->getBody())->sensors[0];
+        //dd($weatherlinkData->data);
 
         DB::beginTransaction();
         try {
