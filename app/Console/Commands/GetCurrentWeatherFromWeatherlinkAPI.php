@@ -46,8 +46,8 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
      */
     public function handle()
     {
-        //$suryaciptaStasion = 140323;
-        $suryaciptaStasion = "a4fbe3c8-a74d-4363-aeac-7d2de710cce2";
+        $suryaciptaStasion = 140323;
+        //$suryaciptaStasion = "a4fbe3c8-a74d-4363-aeac-7d2de710cce2";
 
         $now = Carbon::now();
         $currentUnixEpochTime = $now->copy()->timestamp;
