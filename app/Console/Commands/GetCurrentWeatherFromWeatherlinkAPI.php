@@ -10,6 +10,7 @@ use DB;
 use App\Models\MasterConfig;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GetCurrentWeatherFromWeatherlinkAPI extends Command
 {
@@ -113,12 +114,15 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                     MasterConfig::whereId('LAST_TIMESTAMP_WEATHERLINK')->update(['value' => $weatherlinkData->data[1]->ts]);
                 }
             }else{
-                throw new Exception('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
+               // throw new Exception('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
+
+               Log::info('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
             }
 
             DB::commit();
 
         } catch (Exception $e) {
+            Log::info($e);
             DB::rollBack();
             report($e);
         }

@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-4" style="background-color: #0e394b;">
                     <h3 class="text-header">
-                        <strong>{{ "Rain Rate $last_rain_rate(mm)"  }}</strong>
+                        <strong>{{ "Rain Rate: $last_rain_rate(mm)"  }}</strong>
                     </h3>
                 </div>
                 <div class="col-4" style="background-color: #0e394b;">
