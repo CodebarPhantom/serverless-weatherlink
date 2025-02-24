@@ -38,7 +38,8 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
 
         //dd($now, $hoursNow, $minutesNow,$start,$end);
 
-        $datas = WeatherHistory::where('unix_epoch_time','>=',$start)
+        $datas = WeatherHistory::where('master_station_id', 140323) //karawang dlu aja deh excelnya
+        ->where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)
         ->orderBy('unix_epoch_time','asc')->get();
 

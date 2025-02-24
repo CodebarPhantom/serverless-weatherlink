@@ -58,11 +58,12 @@ class RainNotification extends Command
 
 
 
-        $lastRainRate = WeatherHistory::where('is_send', false)->orderBy('unix_epoch_time', 'desc')->first()->rain_rate_hi_mm ?? 0;
+        $lastRainRate = WeatherHistory::where('master_station_id',140323)->where('is_send', false)->orderBy('unix_epoch_time', 'desc')->first()->rain_rate_hi_mm ?? 0;
         $rainTreshold = MasterConfig::whereId('RAIN_RATE_THRESHOLD')->first()->value;
         if ($lastRainRate >= $rainTreshold) {
 
-            $dataRainRate = WeatherHistory::where('is_send', false)
+            $dataRainRate = WeatherHistory::where('master_station_id',140323)
+                ->where('is_send', false)
                 ->orderBy('unix_epoch_time', 'desc')
                 ->first();
             if ($dataRainRate) { // Ensure a record exists before updating
@@ -73,7 +74,7 @@ class RainNotification extends Command
                 Log::info('No unsent WeatherHistory records found.');
             }
 
-            $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)->get();
+            $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)->whereSendKarawang(true)->get();
             $formatRecipients = [];
 
             foreach ($getEmailRecipients as $getEmailRecipient) {
@@ -84,7 +85,7 @@ class RainNotification extends Command
                 ];
             }
 
-            $getLastRainRateThirtyMinutesSum =  WeatherHistory::orderBy('unix_epoch_time', 'desc')->limit(6)->get()->sum('rain_rate_hi_mm');
+            $getLastRainRateThirtyMinutesSum =  WeatherHistory::where('master_station_id',140323)->orderBy('unix_epoch_time', 'desc')->limit(6)->get()->sum('rain_rate_hi_mm');
             $averageRainRate = number_format((float)$getLastRainRateThirtyMinutesSum / 6, 2, '.', ',');
 
 

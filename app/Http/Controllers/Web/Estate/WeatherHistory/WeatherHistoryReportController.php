@@ -44,9 +44,10 @@ class WeatherHistoryReportController extends Controller
         // $response = json_decode($request->getBody());
         //$last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
 
-        $last_rain_rate = WeatherHistory::orderBy('created_at','desc')->first()->rain_rate_hi_mm;
+        $last_rain_rate = WeatherHistory::where('master_station_id', 140323)->orderBy('created_at','desc')->first()->rain_rate_hi_mm;
         //dd(WeatherHistory::orderBy('created_at','desc')->first());
-        $last_30minutes_rain_rates = WeatherHistory::latest()->take(11)->get();
+        //$last_30minutes_rain_rates = WeatherHistory::latest()->take(11)->get();
+        $last_30minutes_rain_rates = WeatherHistory::where('master_station_id', 140323)->latest()->take(11)->get();
 
         $datas = $last_30minutes_rain_rates->reverse();
 

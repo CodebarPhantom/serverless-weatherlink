@@ -55,12 +55,12 @@ class DailyExportWeatherHistory extends Command
 
 
 
-        $path = "weather-history/{$reportDate}_WeatherHistory.xlsx";
+        $path = "weather-history/karawang/{$reportDate}_WeatherHistory-karawang.xlsx";
         Excel::store(new WeatherHistoryExport($now), $path, 's3_public', null, [
             'visibility' => 'public',
         ]);
 
-        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$reportDate}")->first();
+        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report Karawang {$reportDate}")->first();
 
         !empty($checkReportNameExists) ?
             $weatherHistoryReport  =  $checkReportNameExists
@@ -69,8 +69,9 @@ class DailyExportWeatherHistory extends Command
         DB::beginTransaction();
         try {
 
-            $weatherHistoryReport->name = "Weather Report {$reportDate}";
+            $weatherHistoryReport->name = "Weather Report Karawang {$reportDate}";
             $weatherHistoryReport->path_s3 = $path;
+            $weatherHistoryReport->master_station_id = 140323;
             $weatherHistoryReport->save();
 
         } catch (Exception $e) {
