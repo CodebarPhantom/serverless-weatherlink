@@ -116,13 +116,13 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
             }else{
                // throw new Exception('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
 
-               Log::info('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
+               //Log::info('Error Tidak mendapatkan data 5 Menit terakhir dari API Weatherlink !!');
             }
 
             DB::commit();
 
         } catch (Exception $e) {
-            Log::info($e);
+            //Log::info($e);
             DB::rollBack();
             report($e);
         }

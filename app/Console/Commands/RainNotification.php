@@ -71,7 +71,7 @@ class RainNotification extends Command
                 $dataRainRate->save();
             } else {
                 // Optional: Log or handle the case where no record is found
-                Log::info('No unsent WeatherHistory records found.');
+                //Log::info('No unsent WeatherHistory records found.');
             }
 
             $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)->whereSendKarawang(true)->get();

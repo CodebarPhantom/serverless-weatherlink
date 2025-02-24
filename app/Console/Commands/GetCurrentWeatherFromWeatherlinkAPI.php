@@ -53,7 +53,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
         $apiCallsThisHour = 0; // Track API calls in the current hour
         $startTimeHour = time(); // Track the start time of the current hour
         $apiCallsSinceLastSleep = 0; // Track API calls since the last sleep
-        Log::debug("Mulai: ".Carbon::now()->format('Y-m-d H:i:s'));
+        //Log::debug("Mulai: ".Carbon::now()->format('Y-m-d H:i:s'));
         foreach ($stations as $station) {
             $stationId = $station->id;
             $lastTimestampDB = $station->last_timestamp ?? 0;
@@ -71,7 +71,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                 if ($timeElapsed < 3600) {
                     // Wait until the hour is over
                     $sleepTime = 3600 - $timeElapsed;
-                    Log::info("Hourly API call limit reached. Sleeping for {$sleepTime} seconds.");
+                    //Log::info("Hourly API call limit reached. Sleeping for {$sleepTime} seconds.");
                     sleep($sleepTime);
                 }
                 // Reset the counter and start time
@@ -81,7 +81,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
 
             // Sleep for 1 minute after every 10 API calls
             if ($apiCallsSinceLastSleep >= 10) {
-                Log::info("10 API calls made. Sleeping for 60 seconds.");
+                //Log::info("10 API calls made. Sleeping for 60 seconds.");
                 sleep(60); // Sleep for 1 minute
                 $apiCallsSinceLastSleep = 0; // Reset the counter
             }
@@ -97,8 +97,8 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
 
             $apiCallsThisHour++; // Increment the API call counter
             $apiCallsSinceLastSleep++; // Increment the counter for sleep
-            Log::info("API calls this hour: {$apiCallsThisHour}");
-            Log::info("API calls since last sleep: {$apiCallsSinceLastSleep}");
+            //Log::info("API calls this hour: {$apiCallsThisHour}");
+            //Log::info("API calls since last sleep: {$apiCallsSinceLastSleep}");
 
             // Sleep for 100ms to respect the 10 calls per second limit
             usleep(100000); // 100ms delay
@@ -118,7 +118,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                         $tempLastTimestampDB < $endTime;
                         $tempLastTimestampDB += 86400, $maxTime += 86400
                     ) {
-                        Log::info("Processing time range: {$tempLastTimestampDB} to {$maxTime} for station {$stationId}");
+                        //Log::info("Processing time range: {$tempLastTimestampDB} to {$maxTime} for station {$stationId}");
 
                         // Check if the hourly API call limit is reached
                         if ($apiCallsThisHour >= 1000) {
@@ -126,7 +126,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                             if ($timeElapsed < 3600) {
                                 // Wait until the hour is over
                                 $sleepTime = 3600 - $timeElapsed;
-                                Log::info("Hourly API call limit reached. Sleeping for {$sleepTime} seconds.");
+                                //Log::info("Hourly API call limit reached. Sleeping for {$sleepTime} seconds.");
                                 sleep($sleepTime);
                             }
                             // Reset the counter and start time
@@ -136,7 +136,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
 
                         // Sleep for 1 minute after every 10 API calls
                         if ($apiCallsSinceLastSleep >= 10) {
-                            Log::info("10 API calls made. Sleeping for 60 seconds.");
+                            //Log::info("10 API calls made. Sleeping for 60 seconds.");
                             sleep(60); // Sleep for 1 minute
                             $apiCallsSinceLastSleep = 0; // Reset the counter
                         }
@@ -144,8 +144,8 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                         $weatherlinkDataBatch = $this->getDataFromAPI($stationId, $currentUnixEpochTime, $tempLastTimestampDB, $maxTime);
                         $apiCallsThisHour++; // Increment the API call counter
                         $apiCallsSinceLastSleep++; // Increment the counter for sleep
-                        Log::info("API calls this hour: {$apiCallsThisHour}");
-                        Log::info("API calls since last sleep: {$apiCallsSinceLastSleep}");
+                        //Log::info("API calls this hour: {$apiCallsThisHour}");
+                        //Log::info("API calls since last sleep: {$apiCallsSinceLastSleep}");
 
                         // Sleep for 100ms to respect the 10 calls per second limit
                         usleep(100000); // 100ms delay
@@ -164,8 +164,8 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                                 $dataFound = true; // Data was found
                             }
                         } else {
-                            Log::warning("No sensor data found for station {$stationId} in the specified time range.");
-                            Log::debug("Selesai: ".Carbon::now()->format('Y-m-d H:i:s'));
+                            //Log::warning("No sensor data found for station {$stationId} in the specified time range.");
+                            //Log::debug("Selesai: ".Carbon::now()->format('Y-m-d H:i:s'));
 
                             break; // Early exit if no data is found in this batch
                         }
@@ -189,7 +189,7 @@ class GetCurrentWeatherFromWeatherlinkAPI extends Command
                     $station->save();
                 }
             } else {
-                Log::warning("No sensor data found for station {$stationId} in the last 5 minutes from Weatherlink API.");
+                //Log::warning("No sensor data found for station {$stationId} in the last 5 minutes from Weatherlink API.");
             }
         }
     }

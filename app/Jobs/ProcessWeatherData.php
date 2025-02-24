@@ -32,7 +32,7 @@ class ProcessWeatherData implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("Executed: weatherlink-api:current-weather at " . now());
+        //Log::info("Executed: weatherlink-api:current-weather at " . now());
         Artisan::call('weatherlink-api:current-weather');
     }
 }
