@@ -15,9 +15,11 @@ use Carbon\Carbon;
 class WeatherHistoryExport implements FromView //FromQuery, WithMapping
 {
     public $date;
+    public $masterStationId;
 
-    function __construct($date) {
+    function __construct($date, $masterStationId) {
         $this->date = $date;
+        $this->masterStationId = $masterStationId;
     }
 
     public function view(): View
@@ -38,7 +40,7 @@ class WeatherHistoryExport implements FromView //FromQuery, WithMapping
 
         //dd($now, $hoursNow, $minutesNow,$start,$end);
 
-        $datas = WeatherHistory::where('master_station_id', 140323) //karawang dlu aja deh excelnya
+        $datas = WeatherHistory::where('master_station_id', $this->masterStationId) //karawang dlu aja deh excelnya
         ->where('unix_epoch_time','>=',$start)
         ->where('unix_epoch_time','<=',$end)
         ->orderBy('unix_epoch_time','asc')->get();

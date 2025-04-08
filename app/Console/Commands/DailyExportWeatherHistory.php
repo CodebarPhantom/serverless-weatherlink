@@ -8,6 +8,8 @@ use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
+use App\Models\MasterStation;
+
 
 class DailyExportWeatherHistory extends Command
 {
@@ -47,38 +49,40 @@ class DailyExportWeatherHistory extends Command
         $hoursNow = $now->copy()->format("H");
         $minutesNow = $now->copy()->format("i");
 
-        if((int)$hoursNow === 0 && (int)$minutesNow === 0){
+        if ((int)$hoursNow === 0 && (int)$minutesNow === 0) {
             $reportDate = $now->copy()->subDay()->format('d-m-Y');
-        }else{
+        } else {
             $reportDate = $now->copy()->format('d-m-Y');
         }
 
+        $masterStations = MasterStation::get();
 
+        foreach ($masterStations as $masterStation) {
 
-        $path = "weather-history/karawang/{$reportDate}_WeatherHistory-karawang.xlsx";
-        Excel::store(new WeatherHistoryExport($now), $path, 's3_public', null, [
-            'visibility' => 'public',
-        ]);
+            $path = "weather-history/{$masterStation->name}/{$reportDate}_WeatherHistory-{$masterStation->name}.xlsx";
+            Excel::store(new WeatherHistoryExport($now,$masterStation->id), $path, 's3_public', null, [
+                'visibility' => 'public',
+            ]);
 
-        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report Karawang {$reportDate}")->first();
+            $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$masterStation->name} {$reportDate}")->first();
 
-        !empty($checkReportNameExists) ?
-            $weatherHistoryReport  =  $checkReportNameExists
-            :$weatherHistoryReport = new WeatherHistoryReport();
+            !empty($checkReportNameExists) ?
+                $weatherHistoryReport  =  $checkReportNameExists
+                : $weatherHistoryReport = new WeatherHistoryReport();
 
-        DB::beginTransaction();
-        try {
+            DB::beginTransaction();
+            try {
 
-            $weatherHistoryReport->name = "Weather Report Karawang {$reportDate}";
-            $weatherHistoryReport->path_s3 = $path;
-            $weatherHistoryReport->master_station_id = 140323;
-            $weatherHistoryReport->save();
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            report($e);
-            return abort(500);
+                $weatherHistoryReport->name = "Weather Report {$masterStation->name} {$reportDate}";
+                $weatherHistoryReport->path_s3 = $path;
+                $weatherHistoryReport->master_station_id = $masterStation->id;
+                $weatherHistoryReport->save();
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                report($e);
+                return abort(500);
+            }
         }
-        DB::commit();
     }
 }

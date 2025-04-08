@@ -27,7 +27,7 @@
     </head>
     <body>
         <div class="container">
-            <h2><strong>Download Data Weather History Suryacipta Swadaya</strong></h2>
+            <h2><strong>Download Data Weather History</strong></h2>
             <table class="table table-bordered" id="report-table">
                 <thead>
                     <tr>

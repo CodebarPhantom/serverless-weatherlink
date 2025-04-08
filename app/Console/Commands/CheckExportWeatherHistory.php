@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
+use App\Models\MasterStation;
 
 class CheckExportWeatherHistory extends Command
 {
@@ -48,30 +49,35 @@ class CheckExportWeatherHistory extends Command
         //$minutesNow = $now->copy()->format("i");
         $reportDate = $now->copy()->format('d-m-Y');
 
-        $path = "weather-history/karawang/{$reportDate}_WeatherHistory-karawang.xlsx";
-        Excel::store(new WeatherHistoryExport($now), $path, 's3_public', null, [
-            'visibility' => 'public',
-        ]);
+        $masterStations = MasterStation::get();
 
-        $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report Karawang {$reportDate}")->first();
 
-        !empty($checkReportNameExists) ?
-            $weatherHistoryReport  =  $checkReportNameExists
-            :$weatherHistoryReport = new WeatherHistoryReport();
+        foreach ($masterStations as $masterStation) {
 
-        DB::beginTransaction();
-        try {
+            $path = "weather-history/{$masterStation->name}/{$reportDate}_WeatherHistory-{$masterStation->name}.xlsx";
+            Excel::store(new WeatherHistoryExport($now,$masterStation->id), $path, 's3_public', null, [
+                'visibility' => 'public',
+            ]);
 
-            $weatherHistoryReport->name = "Weather Report Karawang {$reportDate}";
-            $weatherHistoryReport->path_s3 = $path;
-            $weatherHistoryReport->master_station_id = 140323;
-            $weatherHistoryReport->save();
+            $checkReportNameExists = WeatherHistoryReport::whereName("Weather Report {$masterStation->name} {$reportDate}")->first();
 
-        } catch (Exception $e) {
-            DB::rollBack();
-            report($e);
-            return abort(500);
+            !empty($checkReportNameExists) ?
+                $weatherHistoryReport  =  $checkReportNameExists
+                : $weatherHistoryReport = new WeatherHistoryReport();
+
+            DB::beginTransaction();
+            try {
+
+                $weatherHistoryReport->name = "Weather Report {$masterStation->name} {$reportDate}";
+                $weatherHistoryReport->path_s3 = $path;
+                $weatherHistoryReport->master_station_id = $masterStation->id;
+                $weatherHistoryReport->save();
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                report($e);
+                return abort(500);
+            }
         }
-        DB::commit();
     }
 }
