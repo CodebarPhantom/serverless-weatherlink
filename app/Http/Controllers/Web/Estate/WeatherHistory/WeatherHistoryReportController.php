@@ -35,7 +35,7 @@ class WeatherHistoryReportController extends Controller
         ->make(true);
     }
 
-    public function index()
+    public function indexSuryacipta()
     {
         // $suryaciptaStasion = 140323;
         // $now = Carbon::now();
@@ -44,10 +44,12 @@ class WeatherHistoryReportController extends Controller
         // $response = json_decode($request->getBody());
         //$last_rain_rate = $response->sensors[0]->data[0]->rain_rate_mm;
 
-        $last_rain_rate = WeatherHistory::where('master_station_id', 140323)->orderBy('created_at','desc')->first()->rain_rate_hi_mm;
+        $data_last_rain_rate = WeatherHistory::where('master_station_id', 140323)->orderBy('unix_epoch_time','desc')->first();
+        $last_rain_rate = $data_last_rain_rate->rain_rate_hi_mm;
+        $last_rain_rate_date = Carbon::createFromTimestamp($data_last_rain_rate->unix_epoch_time)->format('d/m/Y H:i');
         //dd(WeatherHistory::orderBy('created_at','desc')->first());
         //$last_30minutes_rain_rates = WeatherHistory::latest()->take(11)->get();
-        $last_30minutes_rain_rates = WeatherHistory::where('master_station_id', 140323)->latest()->take(11)->get();
+        $last_30minutes_rain_rates = WeatherHistory::where('master_station_id', 140323)->orderBy('unix_epoch_time','desc')->take(11)->get();
 
         $datas = $last_30minutes_rain_rates->reverse();
 
@@ -69,6 +71,33 @@ class WeatherHistoryReportController extends Controller
 
        // dd($labels,$average_rain_rate, $rain_rate_hi);
 
-        return view('estate.weather-history.index',compact('last_rain_rate','labels','rain_rate_hi','average_rain_rate'));
+        return view('estate.weather-history.index-suryacipta',compact('last_rain_rate','last_rain_rate_date','labels','rain_rate_hi','average_rain_rate'));
+    }
+
+    public function indexSmartpolitan()
+    {
+        $data_last_rain_rate = WeatherHistory::where('master_station_id', 126239)->orderBy('unix_epoch_time','desc')->first();
+        $last_rain_rate = $data_last_rain_rate->rain_rate_hi_mm;
+        $last_rain_rate_date = Carbon::createFromTimestamp($data_last_rain_rate->unix_epoch_time)->format('d/m/Y H:i');
+        $last_30minutes_rain_rates = WeatherHistory::where('master_station_id', 126239)->orderBy('unix_epoch_time','desc')->take(11)->get();
+
+        $datas = $last_30minutes_rain_rates->reverse();
+
+        foreach ($datas as $data) {
+            $label_array[] = Carbon::createFromTimestamp($data->unix_epoch_time)->format('H:i');
+            $rain_rate_hi_mm_datas[] = $data->rain_rate_hi_mm;
+        }
+
+        for($i=0; $i < 6; $i++){
+            $rain_rate_average_array = array_slice($rain_rate_hi_mm_datas, $i, 6);
+            $rain_rate_hi_array = $rain_rate_hi_mm_datas[5+$i];
+            $labels[] = $label_array[5+$i];
+
+
+            $average_rain_rate[] = number_format( array_sum($rain_rate_average_array) / count($rain_rate_average_array),2);
+            $rain_rate_hi[] = $rain_rate_hi_array;
+        }
+
+        return view('estate.weather-history.index-smartpolitan',compact('last_rain_rate','last_rain_rate_date','labels','rain_rate_hi','average_rain_rate'));
     }
 }

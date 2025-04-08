@@ -30,18 +30,21 @@
         <!-- Header - set the background image for the header in the line below-->
 
             <div class="row">
-                <div class="col-4" style="background-color: #0e394b;">
-                    <h3 class="text-header">
+                <div class="col-6" style="background-color: #0e394b;">
+                    <h6 class="text-header">
                         <strong>{{ "Rain Rate: $last_rain_rate(mm)"  }}</strong>
-                    </h3>
+                        <small>{{ $last_rain_rate_date  }}</small>
+                    </h6>
                 </div>
-                <div class="col-4" style="background-color: #0e394b;">
+                {{-- <div class="col-2" style="background-color: #0e394b;">
 
-                </div>
-                <div class="col-4" style="background-color: #0e394b;">
-                    <h3 class="text-header text-end" >
+                </div> --}}
+                <div class="col-6" style="background-color: #0e394b;">
+                    <h6 class="text-header text-end" >
                         <strong><a href="{{ route('weather-history.report') }}" style="text-decoration: none;">Report Download</a></strong>
-                    </h3>
+                        |
+                        <strong><a href="{{ route('index-suryacipta') }}" style="text-decoration: none;">To Suryacipta City Of Industry</a></strong>
+                    </h6>
                 </div>
 
             </div>
@@ -51,7 +54,7 @@
                 </div>
                 <div class="col-sm-12 col-md-7 order-md-1 order-sm-2 order-xs-2">
                     <iframe
-                        src="https://www.weatherlink.com/embeddablePage/show/86da60c806c44759b79af156b6648793/fullscreen"
+                        src="https://www.weatherlink.com/embeddablePage/show/b437bb742b1c484499f33c90273188d4/fullscreen"
                         style="
                            position:absolute
                             top: 0px;

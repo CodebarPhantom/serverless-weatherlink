@@ -66,6 +66,10 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
+        'cloudwatch'=>[
+            'driver' => 'stack',
+            'channels' => ['stderr']
+        ],
 
         'slack' => [
             'driver' => 'slack',
