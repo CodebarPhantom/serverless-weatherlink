@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\MasterConfig;
 use App\Models\MasterEmailSend;
 use App\Models\WeatherHistory;
+use App\Models\MasterStation;
 use Illuminate\Support\Facades\Log;
 
 class RainNotification extends Command
@@ -57,47 +58,52 @@ class RainNotification extends Command
         //   return $response = json_decode($request->status());
 
 
+        $masterStations = MasterStation::get();
+        foreach ($masterStations as $masterStation) {
+            $lastRainRate = WeatherHistory::where('master_station_id', $masterStation->id)->where('is_send', false)->orderBy('unix_epoch_time', 'desc')->first()->rain_rate_hi_mm ?? 0;
+            $rainTreshold = MasterConfig::whereId('RAIN_RATE_THRESHOLD')->first()->value;
+            if ($lastRainRate >= $rainTreshold) {
 
-        $lastRainRate = WeatherHistory::where('master_station_id',140323)->where('is_send', false)->orderBy('unix_epoch_time', 'desc')->first()->rain_rate_hi_mm ?? 0;
-        $rainTreshold = MasterConfig::whereId('RAIN_RATE_THRESHOLD')->first()->value;
-        if ($lastRainRate >= $rainTreshold) {
+                $dataRainRate = WeatherHistory::where('master_station_id', $masterStation->id)
+                    ->where('is_send', false)
+                    ->orderBy('unix_epoch_time', 'desc')
+                    ->first();
+                if ($dataRainRate) { // Ensure a record exists before updating
+                    $dataRainRate->is_send = true;
+                    $dataRainRate->save();
+                } else {
+                    // Optional: Log or handle the case where no record is found
+                    //Log::info('No unsent WeatherHistory records found.');
+                }
 
-            $dataRainRate = WeatherHistory::where('master_station_id',140323)
-                ->where('is_send', false)
-                ->orderBy('unix_epoch_time', 'desc')
-                ->first();
-            if ($dataRainRate) { // Ensure a record exists before updating
-                $dataRainRate->is_send = true;
-                $dataRainRate->save();
-            } else {
-                // Optional: Log or handle the case where no record is found
-                //Log::info('No unsent WeatherHistory records found.');
+                $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)/*->whereSendKarawang(true)*/->get();
+                $formatRecipients = [];
+
+                foreach ($getEmailRecipients as $getEmailRecipient) {
+                    $formatRecipients[] = [
+                        "emailAddress" => [
+                            "address" => $getEmailRecipient->email
+                        ]
+                    ];
+                }
+
+                $getLastRainRateThirtyMinutesSum =  WeatherHistory::where('master_station_id', $masterStation->id)->orderBy('unix_epoch_time', 'desc')->limit(6)->get()->sum('rain_rate_hi_mm');
+                $averageRainRate = number_format((float)$getLastRainRateThirtyMinutesSum / 6, 2, '.', ',');
+
+
+                $accessToken = $this->signin()->access_token;
+                $request = Http::acceptJson()
+                    ->withToken($accessToken)
+                    ->withBody(json_encode($this->arrayTemplateEmail($lastRainRate, $averageRainRate, $now->locale('id')->translatedFormat("D, d F Y H:i"), $formatRecipients, $masterStation->name)), 'application/json')
+                    ->post(config("azure.msgraphUrl") . "/users/" . config("azure.userId") . "/sendMail");
+
+
+                //$response = json_decode($request->status());
             }
-
-            $getEmailRecipients = MasterEmailSend::whereIsTo(true)->whereIsActive(true)->whereSendKarawang(true)->get();
-            $formatRecipients = [];
-
-            foreach ($getEmailRecipients as $getEmailRecipient) {
-                $formatRecipients[] = [
-                    "emailAddress" => [
-                        "address" => $getEmailRecipient->email
-                    ]
-                ];
-            }
-
-            $getLastRainRateThirtyMinutesSum =  WeatherHistory::where('master_station_id',140323)->orderBy('unix_epoch_time', 'desc')->limit(6)->get()->sum('rain_rate_hi_mm');
-            $averageRainRate = number_format((float)$getLastRainRateThirtyMinutesSum / 6, 2, '.', ',');
-
-
-            $accessToken = $this->signin()->access_token;
-            $request = Http::acceptJson()
-                ->withToken($accessToken)
-                ->withBody(json_encode($this->arrayTemplateEmail($lastRainRate, $averageRainRate, $now->locale('id')->translatedFormat("D, d F Y H:i"), $formatRecipients)), 'application/json')
-                ->post(config("azure.msgraphUrl") . "/users/" . config("azure.userId") . "/sendMail");
-
-
-            //$response = json_decode($request->status());
         }
+
+
+
         return;
     }
 
@@ -115,12 +121,12 @@ class RainNotification extends Command
         return $response;
     }
 
-    private function arrayTemplateEmail($lastRainRate, $avereageRainRate, $dateTime, $formatRecipients)
+    private function arrayTemplateEmail($lastRainRate, $avereageRainRate, $dateTime, $formatRecipients, $stationName = "Karawang")
     {
         $year = date("Y");
         return [
             "message" => [
-                "subject" => "Informasi Curah Hujan di Kawasan Suryacipta",
+                "subject" => "Informasi Curah Hujan di {$stationName}",
                 "body" => [
                     "contentType" => "HTML",
                     "content" =>
@@ -131,7 +137,7 @@ class RainNotification extends Command
                   <body>
                     <p>
                         Halo Estate Team,  <br/>
-                        Pesan otomatis ini dikirimkan oleh system untuk memberitahukan informasi curah hujan tinggi beserta rata-rata curah hujan 30 menit terakhir pada kawasan Suryacipta:
+                        Pesan otomatis ini dikirimkan oleh system untuk memberitahukan informasi curah hujan tinggi beserta rata-rata curah hujan 30 menit terakhir di {$stationName}:
                     </p>
                     <p>
                         Curah hujan terakhir: <b>{$lastRainRate} mm/hr</b> <br/>
